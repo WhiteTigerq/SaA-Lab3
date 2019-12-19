@@ -7,11 +7,12 @@ unsigned linear_search(const int* arr, const int des, const unsigned sz)
 {
     unsigned comp_num = 0;
     unsigned i;
-    for (i = 0; i < sz; i++)
+    for (i = 0; i < sz; comp_num++, i++)
     {
         comp_num++;
         if(arr[i] == des) break;
     }
+    comp_num++;
     return comp_num;
 }
               //Линейный
@@ -26,11 +27,12 @@ unsigned fast_linear_search_for_disordered(const int* arr, const int des, const 
         new_array[j] = arr[j];
     }
     unsigned i;
-    for (i = 0; ; i++)
+    for (i = 0;;i++)
     {
         comp_num++;
         if (new_array[i] == des)
         {
+            comp_num++;
             if (i == sz) break;
             else break;
         }
@@ -52,10 +54,12 @@ unsigned fast_linear_search_for_ordered(const int* arr, const int des, const uns
     unsigned i;
     for (i = 0; ; i++)
     {
+        comp_num++;
         if (new_array[i] > des) break;    //В массиве нет элемента
         comp_num++;
         if (new_array[i] == des)
         {
+            comp_num++;
             if (i == sz) break;     //Элемент не найден
             else break;             //Элемент найден
         }
@@ -85,6 +89,7 @@ unsigned binary_search(const int* arr, const int des, const unsigned sz)
                 if (arr[middle] < des) left = middle + 1;
             }
         }
+        comp_num++;
         if (left > right) break;
     }
     return comp_num;
@@ -97,9 +102,9 @@ unsigned block_search(const int* arr, const int des, const unsigned sz)
     int j = 0;
     unsigned block = sz / 10;   //Разбиваем массив на равные блоки
     i = block - 1;
+    comp_num++;
     while (des > arr[i])        //Просматриваем последний элемент каждого блока
     {
-        comp_num++;
         i += block;
     }
     for (j = i - block + 1; j < i; j++)    //Линейный поиск в нужном блоке
@@ -145,7 +150,7 @@ unsigned comparisons_average_number(const unsigned* arr, const unsigned sz)
 
 int main(int argc, const char * argv[]) {
         setlocale(0, "");
-        const unsigned SIZE = 50;
+        const unsigned SIZE = 100;
         using namespace std;
         int disordered_array[SIZE];
         unsigned i;

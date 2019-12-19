@@ -1,11 +1,3 @@
-//
-//  main.cpp
-//  SaA_Lab3
-//
-//  Created by Олег Джинганин on 19.12.2019.
-//  Copyright © 2019 Олег Джинганин. All rights reserved.
-//
-
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -39,8 +31,8 @@ unsigned fast_linear_search_for_disordered(const int* arr, const int des, const 
         comp_num++;
         if (new_array[i] == des)
         {
-            if (i == sz) break;     //Элемент не найден
-            else break;             //Элемент найден
+            if (i == sz) break;
+            else break;
         }
     }
     delete[] new_array;
@@ -103,7 +95,7 @@ unsigned block_search(const int* arr, const int des, const unsigned sz)
     unsigned comp_num = 1;
     unsigned i;
     int j = 0;
-    unsigned block = sz / 10;   //Разбиваем массив на равные блоки, содержащие по 10 элементов
+    unsigned block = sz / 10;   //Разбиваем массив на равные блоки
     i = block - 1;
     while (des > arr[i])        //Просматриваем последний элемент каждого блока
     {
@@ -119,8 +111,7 @@ unsigned block_search(const int* arr, const int des, const unsigned sz)
 }
                    //Блочный
 /////////////////////////////Заполнение массива с количествами операций сравнения
-void fill_comparisons_array(unsigned* c_arr, const unsigned sz, unsigned(*ptr)(const int*, const int, const unsigned),
-                            const int* arr)
+void fill_comparisons_array(unsigned* c_arr, const unsigned sz, unsigned(*ptr)(const int*, const int, const unsigned),const int* arr)
 {
     unsigned i;
     for (i = 0; i < sz; i++) c_arr[i] = ptr(arr, arr[i], sz);
@@ -153,7 +144,65 @@ unsigned comparisons_average_number(const unsigned* arr, const unsigned sz)
 
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+        setlocale(0, "");
+        const unsigned SIZE = 50;
+        using namespace std;
+        int disordered_array[SIZE];
+        unsigned i;
+        int j;
+        srand(time(NULL));
+        for (i = 0; i < SIZE; i++)
+        {
+            disordered_array[i] = rand();
+            disordered_array[i] %= 999;     //генерация случайных чисел в диапазоне до 999
+        }
+        /////////////////////////////Создание упорядоченного массива
+        int ordered_array[SIZE];
+        for (i = 0; i < SIZE; i++) ordered_array[i] = disordered_array[i];
+        for (i = 1; i < SIZE; i++)
+        {
+            for (j = i; j > 0 && ordered_array[j - 1] > ordered_array[j]; j--)
+            {
+                int temp = ordered_array[j];
+                ordered_array[j] = ordered_array[j - 1];
+                ordered_array[j - 1] = temp;
+            }
+        }
+    
+        unsigned comparisons_array[SIZE] = {0};
+        cout << "1. АЛГОРИТМЫ ПОИСКА В НЕУПОРЯДОЧЕННОМ МАССИВЕ РАЗМЕРА " << SIZE << "\n\n";
+        cout << "1.1. Линейный поиск\n";
+        fill_comparisons_array(comparisons_array, SIZE, linear_search, disordered_array);
+        cout << "Максимальное количество операций сравнения = " <<
+        max_comparisons_number(comparisons_array, SIZE) << endl;
+        cout << "Среднее количество операций сравнения = " <<
+        comparisons_average_number(comparisons_array, SIZE) << endl << endl;
+        cout << "1.2. Быстрый линейный поиск\n";
+        fill_comparisons_array(comparisons_array, SIZE, fast_linear_search_for_disordered, disordered_array);
+        cout << "Максимальное количество операций сравнения = " <<
+        max_comparisons_number(comparisons_array, SIZE) << endl;
+        cout << "Среднее количество операций сравнения = " <<
+        comparisons_average_number(comparisons_array, SIZE) << endl << endl << endl;
+        
+        cout << "2. АЛГОРИТМЫ ПОИСКА В УПОРЯДОЧЕННОМ МАССИВЕ РАЗМЕРА " << SIZE << "\n\n";
+        cout << "2.1. Быстрый линейный поиск\n";
+        fill_comparisons_array(comparisons_array, SIZE, fast_linear_search_for_ordered, ordered_array);
+        cout << "Максимальное количество операций сравнения = " <<
+        max_comparisons_number(comparisons_array, SIZE) << endl;
+        cout << "Среднее количество операций сравнения = " <<
+        comparisons_average_number(comparisons_array, SIZE) << endl << endl;
+        cout << "2.2. Бинарный поиск\n";
+        fill_comparisons_array(comparisons_array, SIZE, binary_search, ordered_array);
+        cout << "Максимальное количество операций сравнения = " <<
+        max_comparisons_number(comparisons_array, SIZE) << endl;
+        cout << "Среднее количество операций сравнения = " <<
+        comparisons_average_number(comparisons_array, SIZE) << endl << endl;
+        cout << "2.3. Блочный поиск\n";
+        fill_comparisons_array(comparisons_array, SIZE, block_search, ordered_array);
+        cout << "Максимальное количество операций сравнения = " <<
+        max_comparisons_number(comparisons_array, SIZE) << endl;
+        cout << "Среднее количество операций сравнения = " <<
+        comparisons_average_number(comparisons_array, SIZE) << endl;
+
     return 0;
 }
